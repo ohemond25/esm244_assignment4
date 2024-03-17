@@ -66,18 +66,18 @@ enviroscreen_clean <- enviroscreen %>%
   st_drop_geometry() %>% 
   select(pm2_5, diesel_pm, lead, drinking_water = drink_wat, asthma, education = educatn, poverty, 
          unemployment = unempl, canopy_cover = existing_canopy_pct, heat_illness = zip_pct_64, redlining = class1) %>% 
-  drop_na()
+  drop_na() %>% 
+  mutate(diesel_pm = log(diesel_pm),
+         canopy_cover = log(canopy_cover)) # Log the most skewed variables
 ```
 
 ### Examine variable distributions
 
-I plotted histograms of each variable in my data to examine their distributions. As a couple were highly skewed (diesel_pm and canopy_cover), I logged those to approximate a more normal distribution, as shown below.
+I plotted histograms of each variable in my data to examine their distributions. As a couple were highly skewed (diesel_pm and canopy_cover), I logged those (see code above) to approximate a more normal distribution.
 
 ```{r}
-# Pivot only the numeric columns. Log the most skewed variables
+# Pivot only the numeric columns. 
 enviroscreen_long <- enviroscreen_clean %>% 
-  mutate(diesel_pm = log(diesel_pm),
-         canopy_cover = log(canopy_cover)) %>% 
   pivot_longer(names_to = 'name', values_to = 'value', where(is.numeric))
 ```
 
